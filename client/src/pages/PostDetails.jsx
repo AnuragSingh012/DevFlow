@@ -1,12 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const PostDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [upvoteState, setUpvoteState] = useState(false);
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -55,8 +57,30 @@ const PostDetails = () => {
       }
     };
 
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          setUserId(user._id); // Assuming the user ID is stored in `_id`
+        } else {
+          console.error("Error fetching user data");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
     fetchPost();
     fetchComments();
+    fetchUserData();
   }, [id]);
 
   const handleUpvote = async () => {
@@ -110,6 +134,26 @@ const PostDetails = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/post/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        navigate("/"); // Redirect to the homepage or any other page after successful deletion
+      } else {
+        console.error("Error deleting post");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   if (!post) {
     return <div>Loading...</div>;
   }
@@ -119,7 +163,7 @@ const PostDetails = () => {
       <img
         className="w-full md:w-[40%] h-[20rem] md:h-[35rem] object-cover mb-4 md:mb-0"
         src={post.img}
-        alt=""
+        alt="post"
       />
       <div className="flex flex-col w-full md:w-[60%] custom-scroll h-[560px] px-2">
         <h1 className="font-bold text-2xl md:text-4xl py-2 md:py-6">
@@ -135,25 +179,41 @@ const PostDetails = () => {
             </p>
           ))}
         </div>
-        <div>
-          <p>
-            by <span className="text-[#6469ff]">{post.author.name}</span>
+        <div className="mt-2">
+          <p className="bg-black-200 inline px-2 py-1 rounded-lg">
+            by{" "}
+            <span className="font-semibold text-[#6469ff]">
+              {post.author.name}
+            </span>
           </p>
         </div>
         <div className="flex items-center gap-2 mt-4 ">
           <button
             className={`text-xl ${
-              upvoteState ? "text-green-500" : "text-white"
+              upvoteState ? "text-yellow-300" : "text-white"
             }`}
             onClick={handleUpvote}
           >
-            <i className="fa-solid fa-up-long"></i>
+            <i className="fa-solid fa-circle-up"></i>
           </button>
           <span className="text-2xl">{post.upvotes}</span>
         </div>
+        {post.author._id == userId && (
+          <div className="flex gap-3">
+            <button className="flex justify-center items-center gap-1 text-lg bg-black-200 px-2 py-1 mt-2 mb-2 rounded-md">
+              <i className="fa-solid fa-pen-to-square"></i>Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              className="flex justify-center items-center gap-1 text-lg bg-black-200 px-2 py-1 mt-2 mb-2 rounded-md"
+            >
+              <i className="fa-solid fa-trash text-red-600"></i>Delete
+            </button>
+          </div>
+        )}
         <div>
-          <p className="opacity-80">{post.date}</p>
-          <p className="py-2 md:py-4 text-sm h-[42%] my-2">
+          <p className="opacity-80 text-[13px]">{post.date}</p>
+          <p className="py-2 md:py-4 text-sm h-[42%] my-2 whitespace-pre-wrap">
             {post.description}
           </p>
         </div>
@@ -174,21 +234,25 @@ const PostDetails = () => {
                 <i className="fa-solid fa-paper-plane"></i>
               </button>
             </div>
-            <div className="bg-black-200 mt-4 flex flex-col h-[100%] p-4">
-              {comments.map((comment) => (
-                <div
-                  className="w-[80%] bg-black-100 rounded-lg m-1 px-2 py-2"
-                  key={comment._id}
-                >
-                  <div className="flex gap-2 items-center">
-                    <h1 className="text-[12px] opacity-80">
-                      @{comment.author.name}
-                    </h1>
+            {comments.length > 0 ? (
+              <div className="bg-black-200 mt-4 flex flex-col h-[100%] p-4">
+                {comments.map((comment) => (
+                  <div
+                    className="w-[80%] bg-black-100 rounded-lg m-1 px-2 py-2"
+                    key={comment._id}
+                  >
+                    <div className="flex gap-2 items-center">
+                      <h1 className="text-[12px] opacity-80">
+                        @{comment.author.name}
+                      </h1>
+                    </div>
+                    <h2 className="text-md pl-2">{comment.text}</h2>
                   </div>
-                  <h2 className="text-md pl-2">{comment.text}</h2>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className=" text-center mt-4">No Comments yet</p>
+            )}
           </form>
         </div>
       </div>

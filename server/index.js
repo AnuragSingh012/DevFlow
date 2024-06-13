@@ -8,8 +8,28 @@ import Comment from "./mongodb/models/comment.js";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 const app = express();
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Configure multer-storage-cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "DevFlow_Posts",
+    allowedFormats: ["jpg", "png", "jpeg", "gif"],
+  },
+});
+
+const upload = multer({ storage: storage });
 
 app.use(
   session({
@@ -99,18 +119,23 @@ app.get("/post/:id", async (req, res) => {
   }
 });
 
-// Create Route
-app.post("/post", async (req, res) => {
-  console.log(req.body);
-  const { title, description, img, tags } = req.body;
+// Create Post Route
+app.post("/post", upload.single("image"), async (req, res) => {
+  // Check if multer successfully uploaded the file
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  const { title, description, tags } = req.body;
+  const imageUrl = req.file.path; // Use req.file.path to get the uploaded file URL from Cloudinary
+
   const newPost = new Post({
     title,
     description,
-    img,
     tags,
+    img: imageUrl, // Store the image URL
+    author: req.user._id, // Assuming you're using authentication to get user ID
   });
-
-  newPost.author = req.user._id;
 
   try {
     const savedPost = await newPost.save();
@@ -263,7 +288,10 @@ app.post("/post/comment", async (req, res) => {
     const savedComment = await newComment.save();
 
     // Populate the author field with user details
-    const populatedComment = await Comment.findById(savedComment._id).populate('author', 'name email'); // Populate with the desired fields
+    const populatedComment = await Comment.findById(savedComment._id).populate(
+      "author",
+      "name email"
+    ); // Populate with the desired fields
 
     console.log(populatedComment);
     res.status(201).json(populatedComment);
@@ -272,16 +300,41 @@ app.post("/post/comment", async (req, res) => {
   }
 });
 
-
 app.get("/post/:id/comments", async (req, res) => {
   try {
-    const comments = await Comment.find({ post: req.params.id }).populate('author', 'name email');
+    const comments = await Comment.find({ post: req.params.id }).populate(
+      "author",
+      "name email"
+    );
     res.status(200).json(comments);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
+app.get("/user", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+});
+
+app.delete("/post/:id", async (req, res) => {
+  console.log(req.params);
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Page not found" });
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Post Deleted Sucessfully" });
+  } catch (err) {
+    console.log("Error Deleting post", err);
+    res.status(500).json({ message: "internal server Error" });
+  }
+});
 
 const startServer = async () => {
   try {

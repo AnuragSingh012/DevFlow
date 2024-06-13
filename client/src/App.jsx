@@ -55,7 +55,7 @@ function App() {
     <main className="h-screen bg-black-100">
       <header className="w-full flex justify-between items-center text-white sm:px-8 px-4 py-4 border-b border-b-black-300">
         <Link to="/">
-          <p className="text-xl font-bold">DevFlow</p>
+          <p className="text-xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>Dev<span className="text-red-600">Flow</span></p>
         </Link>
         <div className="flex gap-2">
           {!isLoggedIn && (
@@ -93,7 +93,6 @@ function App() {
       </header>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/post/:id" element={<PostDetails />} />
         <Route
           path="/register"
           element={<SignUp handleLogin={handleLogin} />}
@@ -102,6 +101,7 @@ function App() {
         <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/post" element={<CreatePost />} />
           <Route path="/savePost" element={<SavePost />} />
+          <Route path="/post/:id" element={<PostDetails />} />
         </Route>
       </Routes>
     </main>

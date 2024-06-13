@@ -74,22 +74,22 @@ const Home = () => {
         {filteredPosts.map((post) => (
           <div
             key={post._id}
-            className="flex flex-col bg-black-200 rounded-xl w-[300px] h-[400px] text-white px-6 py-8 cursor-pointer"
+            className="flex flex-col bg-black-200 rounded-xl w-[300px] h-[400px] text-white px-4 py-4 cursor-pointer"
           >
             <Link
               to={`/post/${post._id}`}
               className="flex flex-col justify-between h-full"
             >
               <div className="flex items-center gap-2">
-                <div className="bg-white rounded-full w-[25px] h-[25px] flex justify-center items-center">
+                <div className="bg-white rounded-full w-[20px] h-[20px] text-[10px] flex justify-center items-center">
                   <i className="fa-solid fa-user text-black"></i>
                 </div>
-                <p>{post.author.name}</p>
+                <p className="text-[14px]">{post.author.name}</p>
               </div>
               <h2 className="font-bold text-lg">{post.title}</h2>
               <div className="flex flex-col items-center gap-2">
                 <div className="w-full">
-                  <p className="opacity-80 text-sm">{post.date}</p>
+                  <p className="opacity-80 text-[11px]">{post.date}</p>
                 </div>
                 <div className="flex items-center justify-center">
                   <img
@@ -103,7 +103,7 @@ const Home = () => {
             <div className="flex justify-between mt-4">
               <div className="flex gap-2 justify-center items-center">
                 <button>
-                  <i className="fa-solid fa-arrow-up"></i>
+                <i className="fa-solid fa-circle-up"></i>
                 </button>
                 <p>{post.upvotes}</p>
               </div>

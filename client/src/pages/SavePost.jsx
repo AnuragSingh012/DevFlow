@@ -54,48 +54,60 @@ const SavePost = () => {
 
   return (
     <div className="flex w-full bg-black-100 flex-wrap gap-6 justify-center sm:px-2 px-6 lg:px-2 py-14">
-      {savedPosts.map((post) => (
-        <div
-          key={post._id}
-          className="flex flex-col bg-black-200 rounded-xl w-[300px] h-[400px] text-white px-6 py-8 cursor-pointer"
-        >
-          <Link
-            to={`/post/${post._id}`}
-            className="flex flex-col justify-between h-full"
+      {savedPosts.length > 0 ? (
+        savedPosts.map((post) => (
+          <div
+            key={post._id}
+            className="flex flex-col bg-black-200 rounded-xl w-[300px] h-[400px] text-white px-4 py-4 cursor-pointer"
           >
-            <div className="flex items-center gap-2">
-              <div className="bg-white rounded-full w-[25px] h-[25px] flex justify-center items-center">
-                <i className="fa-solid fa-user text-black"></i>
+            <Link
+              to={`/post/${post._id}`}
+              className="flex flex-col justify-between h-full"
+            >
+              <div className="flex items-center gap-2">
+                <div className="bg-white rounded-full w-[20px] h-[20px] text-[10px] flex justify-center items-center">
+                  <i className="fa-solid fa-user text-black"></i>
+                </div>
+                <p className="text-[14px]">{post.author.name}</p>
               </div>
-              <p>{post.author.name}</p>
-            </div>
-            <h2 className="font-bold text-lg">{post.title}</h2>
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-full">
-                <p className="opacity-80 text-sm">{post.date}</p>
+              <h2 className="font-bold text-lg">{post.title}</h2>
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-full">
+                  <p className="opacity-80 text-[11px]">{post.date}</p>
+                </div>
+                <div className="flex items-center justify-center">
+                  <img
+                    className="w-[310px] h-[180px] object-cover rounded-md"
+                    src={post.img}
+                    alt={post.title}
+                  />
+                </div>
               </div>
-              <div className="flex items-center justify-center">
-                <img
-                  className="w-[310px] h-[180px] object-cover rounded-md"
-                  src={post.img}
-                  alt={post.title}
-                />
+            </Link>
+            <div className="flex justify-between mt-4">
+              <div className="flex gap-2 justify-center items-center">
+                <button>
+                <i className="fa-solid fa-circle-up"></i>
+                </button>
+                <p>{post.upvotes}</p>
               </div>
-            </div>
-          </Link>
-          <div className="flex justify-between mt-4">
-            <div className="flex gap-2 justify-center items-center">
-              <button>
-                <i className="fa-solid fa-arrow-up"></i>
+              <button onClick={() => handleSavePost(post)}>
+                <i className="fa-solid fa-bookmark"></i>
               </button>
-              <p>{post.upvotes}</p>
             </div>
-            <button onClick={() => handleSavePost(post)}>
-              <i className="fa-solid fa-bookmark"></i>
-            </button>
+          </div>
+        ))
+      ) : (
+        <div className="flex justify-center items-center gap-4">
+          <div>
+            <i className="fa-solid fa-circle-xmark text-red-600 text-7xl"></i>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-white text-lg font-bold">No Saved posts yet</h1>
+            <p className="text-white text-sm opacity-80">your saved posts will appear here and you can access anytime</p>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };
