@@ -43,7 +43,6 @@ const Login = ({ handleLogin }) => {
       if (response.ok) {
         // Handle successful post creation
         handleLogin();
-        console.log("User Logged in successfully");
         navigate(from); // Redirect to the intended route
       } else {
         // Handle errors

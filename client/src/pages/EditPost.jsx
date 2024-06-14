@@ -83,7 +83,6 @@ const EditPost = () => {
       });
 
       if (response.ok) {
-        console.log("Post updated successfully");
         navigate("/");
       } else {
         console.error("Error updating post");

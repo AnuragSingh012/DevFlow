@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
+import { CircularProgress } from "@mui/material";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
         const response = await fetch("http://localhost:3000/post", {
           method: "GET",
@@ -18,7 +21,6 @@ const Home = () => {
 
         if (response.ok) {
           const posts = await response.json();
-          console.log("Data fetched successfully:", posts);
           setPosts(posts);
         } else {
           console.error("Error fetching data");
@@ -26,6 +28,7 @@ const Home = () => {
       } catch (error) {
         console.error("Error:", error);
       }
+      setLoading(false);
     };
 
     fetchPosts();
@@ -70,16 +73,23 @@ const Home = () => {
           <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
         </div>
       </div>
-      <div className="flex w-full bg-black-100 flex-wrap gap-6 justify-center sm:px-2 px-6 lg:px-2 py-14">
-        {filteredPosts.map((post) => (
-          <div
-            key={post._id}
-            className="flex flex-col bg-black-200 rounded-xl w-[300px] h-[400px] text-white px-4 py-4 cursor-pointer"
-          >
-            <Card handleSavePost={handleSavePost} post={post} />
-          </div>
-        ))}
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-screen bg-black-100">
+          <CircularProgress size={24} />
+        </div>
+      ) : (
+        <div className="flex w-full bg-black-100 flex-wrap gap-6 justify-center sm:px-2 px-6 lg:px-2 py-14">
+          {filteredPosts.map((post) => (
+            <div
+              key={post._id}
+              className="flex flex-col bg-black-200 rounded-xl w-[300px] h-[400px] text-white px-4 py-4 cursor-pointer"
+            >
+              <Card handleSavePost={handleSavePost} post={post} />
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 };

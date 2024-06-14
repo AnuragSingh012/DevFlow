@@ -46,7 +46,6 @@ const SignUp = ({ handleLogin }) => {
       if (response.ok) {
         // Handle successful post creation
         handleLogin();
-        console.log("user registered successfully");
         navigate(from); // Redirect to the intended route
       } else {
         // Handle errors

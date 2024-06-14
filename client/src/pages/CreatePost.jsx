@@ -56,7 +56,6 @@ const CreatePost = () => {
       });
 
       if (response.ok) {
-        console.log("Post created successfully");
         // Navigate to '/' after successful post creation
         navigate("/");
       } else {
