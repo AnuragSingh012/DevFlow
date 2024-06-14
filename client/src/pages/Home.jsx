@@ -37,7 +37,7 @@ const Home = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await fetch("http://localhost:3000/savePost", {
+      const response = await fetch("http://localhost:3000/user/savePost", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

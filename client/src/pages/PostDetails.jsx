@@ -36,7 +36,7 @@ const PostDetails = () => {
     const fetchComments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/post/${id}/comments`,
+          `http://localhost:3000/post/comment/${id}`,
           {
             method: "GET",
             headers: {
