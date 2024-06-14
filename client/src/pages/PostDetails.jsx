@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const PostDetails = () => {
@@ -200,9 +200,11 @@ const PostDetails = () => {
         </div>
         {post.author._id == userId && (
           <div className="flex gap-3">
-            <button className="flex justify-center items-center gap-1 text-lg bg-black-200 px-2 py-1 mt-2 mb-2 rounded-md">
-              <i className="fa-solid fa-pen-to-square"></i>Edit
-            </button>
+            <Link to={`/post/${id}/edit`}>
+              <button className="flex justify-center items-center gap-1 text-lg bg-black-200 px-2 py-1 mt-2 mb-2 rounded-md">
+                <i className="fa-solid fa-pen-to-square"></i>Edit
+              </button>
+            </Link>
             <button
               onClick={handleDelete}
               className="flex justify-center items-center gap-1 text-lg bg-black-200 px-2 py-1 mt-2 mb-2 rounded-md"

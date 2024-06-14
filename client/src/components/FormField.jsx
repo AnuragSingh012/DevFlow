@@ -24,7 +24,6 @@ const FormField = ({
             accept={accept}
             name={name}
             onChange={handleChange}
-            required
             autoComplete="off"
           />
         </div>

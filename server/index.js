@@ -121,27 +121,60 @@ app.get("/post/:id", async (req, res) => {
 
 // Create Post Route
 app.post("/post", upload.single("image"), async (req, res) => {
-  // Check if multer successfully uploaded the file
-  if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded" });
-  }
-
   const { title, description, tags } = req.body;
-  const imageUrl = req.file.path; // Use req.file.path to get the uploaded file URL from Cloudinary
+  const imageUrl = req.file ? req.file.path : null; // Use req.file.path to get the uploaded file URL from Cloudinary if it exists
 
-  const newPost = new Post({
+  const newPostData = {
     title,
     description,
     tags,
-    img: imageUrl, // Store the image URL
     author: req.user._id, // Assuming you're using authentication to get user ID
-  });
+  };
+
+  if (imageUrl) {
+    newPostData.img = imageUrl; // Add the image URL only if it exists
+  }
+
+  const newPost = new Post(newPostData);
 
   try {
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+
+
+// Edit the Post
+
+app.put("/post/:id/edit", upload.single("image"), async (req, res) => {
+  console.log("updating post");
+  
+  const { id } = req.params;
+  const { title, description, tags } = req.body;
+  const imageUrl = req.file ? req.file.path : null; // Only use the new image URL if a file is uploaded
+
+  const updateData = {
+    title,
+    description,
+    tags,
+  };
+
+  if (imageUrl) {
+    updateData.img = imageUrl; // Only update the image URL if a new file is uploaded
+  }
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updatedPost) {
+      return res.status(404).send("Post not found");
+    }
+    res.json(updatedPost);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
 });
 

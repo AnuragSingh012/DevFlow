@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import SavePost from "./pages/SavePost";
+import EditPost from "./pages/EditPost";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -100,6 +101,7 @@ function App() {
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
         <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/post" element={<CreatePost />} />
+          <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/savePost" element={<SavePost />} />
           <Route path="/post/:id" element={<PostDetails />} />
         </Route>

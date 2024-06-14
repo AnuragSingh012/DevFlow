@@ -1,31 +1,54 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
 
-const CreatePost = () => {
+const EditPost = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); // State to track loading state
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    img: null, // Use null for file upload
+    img: null,
     tags: "",
   });
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/post/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const post = await response.json();
+          setFormData({
+            title: post.title || "",
+            description: post.description || "",
+            img: null,
+            tags: post.tags ? post.tags.join(", ") : "",
+          });
+        } else {
+          console.error("Error fetching post");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchPost();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     if (type === "file") {
-      // Handle file separately
       setFormData({
         ...formData,
-        [name]: e.target.files[0], // Store the file object
-      });
-    } else if (name === "tags") {
-      // Handle tags input as a comma-separated string and convert to array
-      const tagsArray = value.split(",").map((tag) => tag.trim());
-      setFormData({
-        ...formData,
-        [name]: tagsArray,
+        [name]: e.target.files[0],
       });
     } else {
       setFormData({
@@ -37,35 +60,38 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true on form submit
+    setLoading(true);
 
-    // Prepare FormData for file upload
     const postData = new FormData();
     postData.append("title", formData.title);
     postData.append("description", formData.description);
-    formData.tags.forEach((tag, index) => {
+
+    const tagsArray = formData.tags.split(",").map((tag) => tag.trim());
+    tagsArray.forEach((tag, index) => {
       postData.append(`tags[${index}]`, tag);
     });
-    postData.append("image", formData.img); // Append the image file
+
+    if (formData.img) {
+      postData.append("image", formData.img);
+    }
 
     try {
-      const response = await fetch("http://localhost:3000/post", {
-        method: "POST",
+      const response = await fetch(`http://localhost:3000/post/${id}/edit`, {
+        method: "PUT",
         credentials: "include",
-        body: postData, // Use FormData for file upload
+        body: postData,
       });
 
       if (response.ok) {
-        console.log("Post created successfully");
-        // Navigate to '/' after successful post creation
+        console.log("Post updated successfully");
         navigate("/");
       } else {
-        console.error("Error creating post");
+        console.error("Error updating post");
       }
     } catch (error) {
       console.error("Error:", error);
     } finally {
-      setLoading(false); // Set loading to false after form submission completes
+      setLoading(false);
     }
   };
 
@@ -73,7 +99,7 @@ const CreatePost = () => {
     <div className="bg-black-100 text-white w-full p-8 sm:px-[50px] sm:py-[20px] md:px-[100px] md:py-[40px] lg:px-[400px] lg:py-[40px] flex justify-center items-center">
       <div className="w-full">
         <div>
-          <h1 className="font-bold text-4xl">Create Post</h1>
+          <h1 className="font-bold text-4xl">Edit Post</h1>
         </div>
         <div>
           <form
@@ -91,7 +117,7 @@ const CreatePost = () => {
               value={formData.title}
               handleChange={handleChange}
               className="px-2 py-2 rounded-sm bg-black-200 text-white"
-              disabled={loading} // Disable input while loading
+              disabled={loading}
             />
             <FormField
               labelName="Content"
@@ -101,7 +127,7 @@ const CreatePost = () => {
               value={formData.description}
               handleChange={handleChange}
               className="px-2 py-2 rounded-sm bg-black-200 text-white"
-              disabled={loading} // Disable input while loading
+              disabled={loading}
             />
             <FormField
               labelName="Add Image"
@@ -110,7 +136,7 @@ const CreatePost = () => {
               id="img"
               handleChange={handleChange}
               className="px-2 py-2 rounded-sm bg-black-200 text-white"
-              disabled={loading} // Disable input while loading
+              disabled={loading}
             />
             <FormField
               labelName="Add Tags (separated by comma ' , ')"
@@ -120,7 +146,7 @@ const CreatePost = () => {
               value={formData.tags}
               handleChange={handleChange}
               className="px-2 py-2 rounded-sm bg-black-200 text-white"
-              disabled={loading} // Disable input while loading
+              disabled={loading}
             />
             <div className="flex justify-center items-center">
               <button
@@ -128,9 +154,9 @@ const CreatePost = () => {
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 type="submit"
-                disabled={loading} // Disable button while loading
+                disabled={loading}
               >
-                {loading ? "Creating... wait for a second" : "Create Post"}
+                {loading ? "Updating... wait for a second" : "Edit Post"}
               </button>
             </div>
           </form>
@@ -140,4 +166,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default EditPost;
