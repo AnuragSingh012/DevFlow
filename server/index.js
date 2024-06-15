@@ -2,10 +2,9 @@ import express from "express";
 import "dotenv/config";
 import connectDB from "./mongodb/connect.js";
 import cors from "cors";
-import User from "./mongodb/models/user.js";
 import session from "express-session";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
+import passport from "./config/passportConfig.js";
+
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
@@ -40,10 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport local strategy
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
 
 // Check authentication status
 app.get("/checkAuthStatus", (req, res) => {
