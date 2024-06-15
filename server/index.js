@@ -26,7 +26,7 @@ app.use(
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your front-end origin
+    origin: "https://dev-flow-nine.vercel.app", // Replace with your front-end origin
     credentials: true, // Allow cookies and credentials
   })
 );
