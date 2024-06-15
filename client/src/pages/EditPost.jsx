@@ -16,7 +16,7 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/post/${id}`, {
+        const response = await fetch(`https://devflow-srjs.onrender.com/post/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -76,7 +76,7 @@ const EditPost = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/post/${id}/edit`, {
+      const response = await fetch(`https://devflow-srjs.onrender.com/post/${id}/edit`, {
         method: "PUT",
         credentials: "include",
         body: postData,

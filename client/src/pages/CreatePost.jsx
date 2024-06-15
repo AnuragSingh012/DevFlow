@@ -49,7 +49,7 @@ const CreatePost = () => {
     postData.append("image", formData.img); // Append the image file
 
     try {
-      const response = await fetch("http://localhost:3000/post", {
+      const response = await fetch("https://devflow-srjs.onrender.com/post", {
         method: "POST",
         credentials: "include",
         body: postData, // Use FormData for file upload

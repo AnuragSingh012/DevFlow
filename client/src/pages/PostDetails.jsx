@@ -16,7 +16,7 @@ const PostDetails = () => {
     const fetchPost = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:3000/post/${id}`, {
+        const response = await fetch(`https://devflow-srjs.onrender.com/post/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const PostDetails = () => {
     const fetchComments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/post/comment/${id}`,
+          `https://devflow-srjs.onrender.com/post/comment/${id}`,
           {
             method: "GET",
             headers: {
@@ -62,7 +62,7 @@ const PostDetails = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/user", {
+        const response = await fetch("https://devflow-srjs.onrender.com/user", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const PostDetails = () => {
 
   const handleUpvote = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/post/${id}/upvote`, {
+      const response = await fetch(`https://devflow-srjs.onrender.com/post/${id}/upvote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const PostDetails = () => {
 
     const newComment = { text, post_id: id };
     try {
-      const response = await fetch(`http://localhost:3000/post/comment`, {
+      const response = await fetch(`https://devflow-srjs.onrender.com/post/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,7 @@ const PostDetails = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/post/${id}`, {
+      const response = await fetch(`https://devflow-srjs.onrender.com/post/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

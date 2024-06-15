@@ -19,7 +19,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3000/checkAuthStatus", {
+      const response = await fetch("https://devflow-srjs.onrender.com/checkAuthStatus", {
         method: "GET",
         credentials: "include",
       });
@@ -35,7 +35,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch("https://devflow-srjs.onrender.com/logout", {
         method: "GET",
         credentials: "include",
       });

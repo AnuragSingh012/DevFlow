@@ -34,7 +34,7 @@ const SignUp = ({ handleLogin }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/register", {
+      const response = await fetch("https://devflow-srjs.onrender.com/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
