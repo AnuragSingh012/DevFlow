@@ -3,8 +3,9 @@ import "dotenv/config";
 import connectDB from "./mongodb/connect.js";
 import cors from "cors";
 import session from "express-session";
-import passport from "./config/passportConfig.js";
-
+import passport from "passport";
+import {Strategy as LocalStrategy } from "passport-local";
+import User from "./mongodb/models/user.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
@@ -12,34 +13,40 @@ import postRoutes from "./routes/postRoutes.js";
 const app = express();
 
 app.use(
+  cors({
+    origin: ["https://dev-flow-nine.vercel.app", "http://localhost:5173"], // Replace with your front-end origin
+    credentials: true, // Allow cookies and credentials
+  })
+);
+
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
   session({
-    secret: "mysupersecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // Set to true if you're using HTTPS
+      secure: process.env.NODE_ENV === "production", 
       httpOnly: true,
       sameSite: "lax", // Adjust based on your needs ('lax' or 'none')
     },
   })
 );
 
-app.use(
-  cors({
-    origin: "https://dev-flow-nine.vercel.app", // Replace with your front-end origin
-    credentials: true, // Allow cookies and credentials
-  })
-);
 
-// Middleware to parse JSON request bodies
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Passport local strategy
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-
-
 
 // Check authentication status
 app.get("/checkAuthStatus", (req, res) => {
