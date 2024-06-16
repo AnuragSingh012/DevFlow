@@ -2,9 +2,10 @@ import express from "express";
 import "dotenv/config";
 import connectDB from "./mongodb/connect.js";
 import cors from "cors";
+import MongoStore from 'connect-mongo';
 import session from "express-session";
 import passport from "passport";
-import {Strategy as LocalStrategy } from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
 import User from "./mongodb/models/user.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -19,13 +20,21 @@ app.use(
   })
 );
 
-
 // Middleware to parse JSON request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const store = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URL,
+  crypto: {
+    secret: process.env.SESSION_SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
 app.use(
   session({
+    store,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -37,13 +46,10 @@ app.use(
   })
 );
 
-
-
 // Passport local strategy
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 
 // Passport middleware
 app.use(passport.initialize());
