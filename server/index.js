@@ -55,15 +55,6 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Check authentication status
-app.get("/checkAuthStatus", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.status(200).send("Authenticated");
-  } else {
-    res.status(401).send("Unauthenticated");
-  }
-});
-
 app.use("/post", postRoutes);
 app.use("/", authRoutes);
 app.use("/post/comment", commentRoutes);

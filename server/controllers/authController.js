@@ -15,7 +15,11 @@ export const registerUser = async (req, res, next) => {
       res.status(201).json(registeredUser);
     });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    if (err.name === 'UserExistsError') {
+      res.status(400).json({ message: 'Username already taken' });
+    } else {
+      res.status(400).json({ message: err.message });
+    }
   }
 };
 

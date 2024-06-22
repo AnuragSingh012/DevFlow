@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import SavePost from "./pages/SavePost";
 import EditPost from "./pages/EditPost";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,7 +21,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch("https://devflow-srjs.onrender.com/checkAuthStatus", {
+      const response = await fetch("https://devflow-srjs.onrender.com/user", {
         method: "GET",
         credentials: "include",
       });
@@ -41,10 +43,14 @@ function App() {
       });
       if (response.ok) {
         setIsLoggedIn(false);
-        navigate("/login");
+        navigate("/");
+      } else {
+        console.error("Failed to logout");
+        toast.error("Failed to logout");
       }
     } catch (error) {
       console.error("Error logging out:", error);
+      toast.error("Error logging out", error);
     }
   };
 
@@ -54,9 +60,15 @@ function App() {
 
   return (
     <main className="h-screen bg-black-100">
+      <ToastContainer />
       <header className="w-full flex justify-between items-center text-white sm:px-8 px-4 py-4 border-b border-b-black-300">
         <Link to="/">
-          <p className="text-xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>Dev<span className="text-red-600">Flow</span></p>
+          <p
+            className="text-xl font-bold"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            Dev<span className="text-red-600">Flow</span>
+          </p>
         </Link>
         <div className="flex gap-2">
           {!isLoggedIn && (
@@ -99,11 +111,11 @@ function App() {
           element={<SignUp handleLogin={handleLogin} />}
         />
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
+        <Route path="/post/:id" element={<PostDetails />} />
         <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/post" element={<CreatePost />} />
           <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/savePost" element={<SavePost />} />
-          <Route path="/post/:id" element={<PostDetails />} />
         </Route>
       </Routes>
     </main>

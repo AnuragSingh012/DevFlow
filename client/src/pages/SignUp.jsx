@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import FormField from "../components/FormField";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = ({ handleLogin }) => {
   const [formData, setFormData] = useState({
@@ -49,15 +51,19 @@ const SignUp = ({ handleLogin }) => {
         navigate(from); // Redirect to the intended route
       } else {
         // Handle errors
+        const errorData = await response.json();
+        toast.error(errorData.message);
         console.error("Error user registration");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("An unexpected error occurred.");
     }
   };
 
   return (
     <div className="text-white w-full bg-black-100 p-8 sm:px-[50px] sm:py-[20px] md:px-[100px] md:py-[40px] lg:px-[500px] lg:py-[40px] flex justify-center items-center">
+      <ToastContainer />
       <form className="w-full" onSubmit={handleSubmit}>
         <FormField
           labelName="Name"

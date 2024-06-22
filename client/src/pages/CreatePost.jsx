@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -59,9 +61,11 @@ const CreatePost = () => {
         // Navigate to '/' after successful post creation
         navigate("/");
       } else {
+        toast.error("Error creating post");
         console.error("Error creating post");
       }
     } catch (error) {
+      toast.error("Error creating post", error);
       console.error("Error:", error);
     } finally {
       setLoading(false); // Set loading to false after form submission completes
@@ -70,6 +74,7 @@ const CreatePost = () => {
 
   return (
     <div className="bg-black-100 text-white w-full p-8 sm:px-[50px] sm:py-[20px] md:px-[100px] md:py-[40px] lg:px-[400px] lg:py-[40px] flex justify-center items-center">
+      <ToastContainer />
       <div className="w-full">
         <div>
           <h1 className="font-bold text-4xl">Create Post</h1>

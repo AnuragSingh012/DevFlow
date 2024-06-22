@@ -1,6 +1,8 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -87,6 +89,11 @@ const PostDetails = () => {
   }, [id]);
 
   const handleUpvote = async () => {
+    if (!userId) {
+      toast.error("Please Login to Upvote");
+      return;
+    }
+
     try {
       const response = await fetch(`https://devflow-srjs.onrender.com/post/${id}/upvote`, {
         method: "POST",
@@ -114,6 +121,11 @@ const PostDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setText("");
+
+    if (!userId) {
+      toast.error("Please Login to Comment");
+      return;
+    }
 
     const newComment = { text, post_id: id };
     try {
@@ -163,6 +175,7 @@ const PostDetails = () => {
 
   return (
     <>
+      <ToastContainer />
       {loading ? (
         <div className="flex justify-center items-center h-screen bg-black-100">
           <CircularProgress size={24} />

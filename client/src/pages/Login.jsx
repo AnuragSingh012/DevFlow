@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import FormField from "../components/FormField";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Login = ({ handleLogin }) => {
   const [formData, setFormData] = useState({
@@ -46,15 +49,18 @@ const Login = ({ handleLogin }) => {
         navigate(from); // Redirect to the intended route
       } else {
         // Handle errors
+        toast.error("The username or password that you've entered was incorrect");
         console.error("Error user login");
       }
     } catch (error) {
+      toast.error("Network Error Occured", error);
       console.error("Error:", error);
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center">
+      <ToastContainer />
       <div className="text-white w-full p-8 sm:px-[50px] sm:py-[20px] md:px-[100px] md:py-[40px] lg:px-[500px] lg:py-[40px] flex justify-center items-center">
         <form className="w-full" onSubmit={handleSubmit}>
           <FormField
