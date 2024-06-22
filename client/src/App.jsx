@@ -21,7 +21,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch("https://devflow-srjs.onrender.com/user", {
+      const response = await fetch("https://devflow-3g17.onrender.com/user", {
         method: "GET",
         credentials: "include",
       });
@@ -37,7 +37,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://devflow-srjs.onrender.com/logout", {
+      const response = await fetch("https://devflow-3g17.onrender.com/logout", {
         method: "GET",
         credentials: "include",
       });
