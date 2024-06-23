@@ -40,14 +40,17 @@ const Home = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await fetch("https://devflow-3g17.onrender.com/user/savePost", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ id: post._id }),
-      });
+      const response = await fetch(
+        "https://devflow-3g17.onrender.com/user/savePost",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ id: post._id }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
