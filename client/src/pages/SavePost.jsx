@@ -10,7 +10,7 @@ const SavePost = () => {
     const fetchSavedPosts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/user/savePost", {
+        const response = await fetch("https://devflow-3g17.onrender.com/user/savePost", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const SavePost = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await fetch("http://localhost:3000/user/savePost", {
+      const response = await fetch("https://devflow-3g17.onrender.com/user/savePost", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

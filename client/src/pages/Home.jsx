@@ -13,7 +13,7 @@ const Home = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/post", {
+        const response = await fetch("https://devflow-3g17.onrender.com/post", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const Home = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await fetch("http://localhost:3000/user", {
+      const response = await fetch("https://devflow-3g17.onrender.com/user", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const Home = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/user/savePost", {
+      const response = await fetch("https://devflow-3g17.onrender.com/user/savePost", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
