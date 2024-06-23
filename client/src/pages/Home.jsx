@@ -4,7 +4,7 @@ import { CircularProgress } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Home = () => {
+const Home = ({ isLoggedIn }) => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,27 +41,11 @@ const Home = () => {
   );
 
   const handleSavePost = async (post) => {
-    try {
-      const response = await fetch("https://devflow-3g17.onrender.com/user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const user = await response.json();
-        console.log(user);
-      } else {
-        console.error("Error fetching user data");
-        toast.error("Please Login to Save Posts");
-        return;
-      }
-    } catch (error) {
-      console.error("Error:", error);
+    if (!isLoggedIn) {
+      toast.error("Please Login to Save Posts");
+      return;
     }
-
+    
     try {
       const response = await fetch("https://devflow-3g17.onrender.com/user/savePost", {
         method: "PATCH",
@@ -100,7 +84,7 @@ const Home = () => {
 
       {loading ? (
         <div className="flex justify-center items-center h-screen bg-black-100">
-          <CircularProgress size={24} />
+          <CircularProgress size={34} />
         </div>
       ) : (
         <div className="flex w-full bg-black-100 flex-wrap gap-6 justify-center sm:px-2 px-6 lg:px-2 py-14">

@@ -105,14 +105,14 @@ function App() {
         </div>
       </header>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
         <Route
           path="/register"
           element={<SignUp handleLogin={handleLogin} />}
         />
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-        <Route path="/post/:id" element={<PostDetails />} />
-        <Route element={<ProtectedRoute />}>
+        <Route path="/post/:id" element={<PostDetails isLoggedIn={isLoggedIn} />} />
+        <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/post" element={<CreatePost />} />
           <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/savePost" element={<SavePost />} />
