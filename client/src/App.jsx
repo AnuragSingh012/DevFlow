@@ -25,8 +25,6 @@ function App() {
         });
         if (response.ok) {
           const userData = await response.json();
-          console.log("response = ", userData);
-          console.log(userData._id);
           setUserId(userData._id);
           setIsLoggedIn(true);
         } else {
@@ -38,7 +36,7 @@ function App() {
     };
 
     checkAuthStatus();
-  }, [isLoggedIn]);
+  }, []);
 
   const handleLogout = async () => {
     try {
