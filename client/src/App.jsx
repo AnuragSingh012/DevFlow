@@ -13,27 +13,32 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch("https://devflow-3g17.onrender.com/user", {
-        method: "GET",
-        credentials: "include",
-      });
-      if (response.ok) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch("https://devflow-3g17.onrender.com/user", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          console.log("response = ", userData);
+          console.log(userData._id);
+          setUserId(userData._id);
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error("Error checking authentication status:", error);
       }
-    } catch (error) {
-      console.error("Error checking authentication status:", error);
-    }
-  };
+    };
+
+    checkAuthStatus();
+  }, [isLoggedIn]);
 
   const handleLogout = async () => {
     try {
@@ -111,7 +116,10 @@ function App() {
           element={<SignUp handleLogin={handleLogin} />}
         />
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-        <Route path="/post/:id" element={<PostDetails isLoggedIn={isLoggedIn} />} />
+        <Route
+          path="/post/:id"
+          element={<PostDetails userId={userId} isLoggedIn={isLoggedIn} />}
+        />
         <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/post" element={<CreatePost />} />
           <Route path="/post/:id/edit" element={<EditPost />} />

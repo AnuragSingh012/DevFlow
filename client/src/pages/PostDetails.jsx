@@ -4,19 +4,17 @@ import { CircularProgress } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const PostDetails = ({ isLoggedIn }) => {
+const PostDetails = ({ isLoggedIn, userId }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [upvoteState, setUpvoteState] = useState(false);
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchPost = async () => {
-      setLoading(true);
       try {
         const response = await fetch(`https://devflow-3g17.onrender.com/post/${id}`, {
           method: "GET",
@@ -61,32 +59,8 @@ const PostDetails = ({ isLoggedIn }) => {
       }
     };
 
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("https://devflow-3g17.onrender.com/user", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const user = await response.json();
-          console.log(user);
-          setUserId(user._id);
-        } else {
-          console.error("Error fetching user data");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
     fetchPost();
     fetchComments();
-    fetchUserData();
-    setLoading(false);
   }, [id]);
 
   const handleUpvote = async () => {
@@ -172,7 +146,7 @@ const PostDetails = ({ isLoggedIn }) => {
 
   if (!post) {
     return (
-      <div className="text-white h-full w-full flex items-center justify-center">
+      <div className="text-white bg-black-100 h-full w-full flex items-center justify-center">
         <CircularProgress size={34} />
       </div>
     );
