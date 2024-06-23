@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import { CircularProgress } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -11,7 +13,7 @@ const Home = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://devflow-3g17.onrender.com/post", {
+        const response = await fetch("http://localhost:3000/post", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -40,17 +42,35 @@ const Home = () => {
 
   const handleSavePost = async (post) => {
     try {
-      const response = await fetch(
-        "https://devflow-3g17.onrender.com/user/savePost",
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ id: post._id }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        console.log(user);
+      } else {
+        console.error("Error fetching user data");
+        toast.error("Please Login to Save Posts");
+        return;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/user/savePost", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ id: post._id }),
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -65,6 +85,7 @@ const Home = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="flex justify-center items-center mt-4 relative">
         <div className="flex justify-center items-center mt-4 relative w-[80%]">
           <input

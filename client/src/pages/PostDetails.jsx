@@ -18,7 +18,7 @@ const PostDetails = () => {
     const fetchPost = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`https://devflow-3g17.onrender.com/post/${id}`, {
+        const response = await fetch(`http://localhost:3000/post/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const PostDetails = () => {
     const fetchComments = async () => {
       try {
         const response = await fetch(
-          `https://devflow-3g17.onrender.com/post/comment/${id}`,
+          `http://localhost:3000/post/comment/${id}`,
           {
             method: "GET",
             headers: {
@@ -64,7 +64,7 @@ const PostDetails = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch("https://devflow-3g17.onrender.com/user", {
+        const response = await fetch("http://localhost:3000/user", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -74,7 +74,8 @@ const PostDetails = () => {
 
         if (response.ok) {
           const user = await response.json();
-          setUserId(user._id); // Assuming the user ID is stored in `_id`
+          console.log(user);
+          setUserId(user._id);
         } else {
           console.error("Error fetching user data");
         }
@@ -95,7 +96,7 @@ const PostDetails = () => {
     }
 
     try {
-      const response = await fetch(`https://devflow-3g17.onrender.com/post/${id}/upvote`, {
+      const response = await fetch(`http://localhost:3000/post/${id}/upvote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +130,7 @@ const PostDetails = () => {
 
     const newComment = { text, post_id: id };
     try {
-      const response = await fetch(`https://devflow-3g17.onrender.com/post/comment`, {
+      const response = await fetch(`http://localhost:3000/post/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +152,7 @@ const PostDetails = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`https://devflow-3g17.onrender.com/post/${id}`, {
+      const response = await fetch(`http://localhost:3000/post/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

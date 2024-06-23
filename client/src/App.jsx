@@ -21,7 +21,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch("https://devflow-3g17.onrender.com/user", {
+      const response = await fetch("http://localhost:3000/user", {
         method: "GET",
         credentials: "include",
       });
@@ -37,7 +37,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://devflow-3g17.onrender.com/logout", {
+      const response = await fetch("http://localhost:3000/logout", {
         method: "GET",
         credentials: "include",
       });
@@ -112,7 +112,7 @@ function App() {
         />
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
         <Route path="/post/:id" element={<PostDetails />} />
-        <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
+        <Route element={<ProtectedRoute />}>
           <Route path="/post" element={<CreatePost />} />
           <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/savePost" element={<SavePost />} />
