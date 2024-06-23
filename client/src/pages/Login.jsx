@@ -1,19 +1,15 @@
 import { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import FormField from "../components/FormField";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = ({ handleLogin }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,11 +41,14 @@ const Login = ({ handleLogin }) => {
 
       if (response.ok) {
         // Handle successful post creation
-        handleLogin();
-        navigate(from); // Redirect to the intended route
+        const data = await response.json();
+        handleLogin(data);
+        navigate(-1); // Redirect to the intended route
       } else {
         // Handle errors
-        toast.error("The username or password that you've entered was incorrect");
+        toast.error(
+          "The username or password that you've entered was incorrect"
+        );
         console.error("Error user login");
       }
     } catch (error) {

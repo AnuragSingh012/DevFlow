@@ -25,7 +25,7 @@ const Home = ({ isLoggedIn }) => {
           const posts = await response.json();
           setPosts(posts);
         } else {
-          console.error("Error fetching data");
+          console.error("Error fetching datas");
         }
       } catch (error) {
         console.error("Error:", error);

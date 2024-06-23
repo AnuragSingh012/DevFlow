@@ -16,28 +16,6 @@ function App() {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await fetch("https://devflow-3g17.onrender.com/user", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUserId(userData._id);
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        console.error("Error checking authentication status:", error);
-      }
-    };
-
-    checkAuthStatus();
-  }, []);
-
   const handleLogout = async () => {
     try {
       const response = await fetch("https://devflow-3g17.onrender.com/logout", {
@@ -57,8 +35,9 @@ function App() {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = (data) => {
     setIsLoggedIn(true);
+    setUserId(data._id);
   };
 
   return (

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = ({ handleLogin }) => {
   const [formData, setFormData] = useState({
@@ -13,8 +13,6 @@ const SignUp = ({ handleLogin }) => {
   });
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,9 +44,9 @@ const SignUp = ({ handleLogin }) => {
       });
 
       if (response.ok) {
-        // Handle successful post creation
-        handleLogin();
-        navigate(from); // Redirect to the intended route
+        const data = await response.json();
+        handleLogin(data);
+        navigate(-2); // Redirect to the intended route
       } else {
         // Handle errors
         const errorData = await response.json();
