@@ -1,11 +1,8 @@
-// ProtectedRoute.jsx
-import { useNavigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = ({ isLoggedIn }) => {
-  const navigate = useNavigate();
-  
   if (!isLoggedIn) {
-    return navigate("/login");
+    return <Navigate to="/login" />;
   }
 
   return <Outlet />;
